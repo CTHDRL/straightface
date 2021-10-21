@@ -1,13 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/main.js"></script>
-  </body>
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="icon" type="image/svg+xml" href="/static/favicon.png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Straight Face-It</title>
+    </head>
+    <body class="phase-01-active">
+        <div id="container">
+
+            <!-- Phase 1 - Splash -->
+            <div class="game-phase game-phase-01">
+                <h1>Say it with a straight face</h1>
+                <button>Make me laugh</button>
+            </div>
+
+            <!-- Phase 2 - Instructions -->
+            <div class="game-phase game-phase-02">
+            <h1>Game Instructions</h1>
+            </div>
+
+            <!-- Phase 3 - Calibration -->
+            <div class="game-phase game-phase-03">
+            <h1>Mic/Camera Calibration</h1>
+            </div>
+
+            <!-- Phase 4 - Gameplay -->
+            <div class="game-phase game-phase-04">
+            <h1>Gameplay</h1>
+            </div>
+
+            <!-- Phase 5 - Game over -->
+            <div class="game-phase game-phase-05">
+            <h1>Game Over</h1>
+            </div>
+
+        </div>
+
+        <script type="module" src="/src/main.js"></script>
+    </body>
 </html>
