@@ -1,7 +1,11 @@
 body {
-    background-color: black;
-    color: white;
+    --yellow: #F4FF00;
+    --black: #000;
+    --white: #FFF;
+    background-color: var(--black);
+    color: var(--white);
     font-family: 'Helvetica Neue';
+    margin: 0;
 }
 
 a {
@@ -17,5 +21,30 @@ a {
 .phase-03-active .game-phase-03,
 .phase-04-active .game-phase-04,
 .phase-05-active .game-phase-05 {
-    display: initial;
+    display: grid;
+}
+
+.game-phase.has-hf {
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
+}
+
+// phase header
+.header {
+    text-align: center;
+    padding: 20px;
+
+    .logo-link {
+        display: inline-block;
+    }
+}
+
+// phase footer
+.footer {
+    text-align: center;
+    padding: 20px;
+
+    .academy-link {
+        display: inline-block;
+    }
 }
