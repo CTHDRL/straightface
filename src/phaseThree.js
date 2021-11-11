@@ -11,6 +11,14 @@ export default async () => {
     // Set tracking class
     document.body.classList.add('tracking')
 
+    // Show video feed
+    var video = document.querySelector('video.face-readout')
+    video.srcObject = stream
+    video.onloadedmetadata = () => {
+        video.play()
+    }
+
+    // Waveform visualizer
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)()
     const analyser = audioCtx.createAnalyser()
     const source = audioCtx.createMediaStreamSource(stream)
@@ -46,7 +54,6 @@ export default async () => {
             x += barWidth + 1
         }
     }
-
     draw()
 
     // canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
