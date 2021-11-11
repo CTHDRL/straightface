@@ -1,7 +1,7 @@
 body {
-    --yellow: #F4FF00;
+    --yellow: #f4ff00;
     --black: #000;
-    --white: #FFF;
+    --white: #fff;
     background-color: var(--black);
     color: var(--yellow);
     font-family: monospace;
@@ -30,7 +30,10 @@ a {
     }
 }
 
-h1, h2, h3, .btn {
+h1,
+h2,
+h3,
+.btn {
     font-family: 'Helvetica Neue';
 }
 
@@ -112,7 +115,8 @@ h1 {
         border: 1px solid var(--yellow);
         position: relative;
 
-        img,svg {
+        img,
+        svg {
             position: absolute;
             object-position: center;
             object-fit: cover;
@@ -129,6 +133,111 @@ h1 {
     .happy-spin {
         animation: spin 8s linear infinite;
         transform-origin: center;
+    }
+}
+
+.game-phase-04 {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    grid-template-rows: auto 1fr 1fr;
+    min-height: 100vh;
+
+    h1 {
+        font-size: 12vh;
+    }
+
+    // structure
+    > * {
+        position: relative;
+    }
+    .phrase {
+        grid-row: span 2;
+    }
+    .emotion-chart,
+    .face-tracking {
+        border-bottom: 1px solid var(--yellow);
+    }
+    .emotion-chart,
+    .face-tracking,
+    .voice {
+        border-right: 1px solid var(--yellow);
+    }
+
+    .label {
+        position: absolute;
+        font-size: 14px;
+        text-transform: uppercase;
+        left: 10px;
+        top: 10px;
+    }
+
+    .emotion-chart {
+        padding-bottom: 30px;
+    }
+
+    .play-header {
+        grid-template-columns: 1fr auto;
+        display: grid;
+
+        > * {
+            position: relative;
+        }
+        .left {
+            display: flex;
+
+            .prompt {
+                text-transform: uppercase;
+                font-size: 20px;
+                padding-left: 4vh;
+                margin-bottom: auto;
+                margin-top: auto;
+            }
+        }
+        .reset-row {
+            text-align: right;
+            padding: 10px;
+
+            a {
+                text-decoration: none;
+            }
+        }
+        .score-box {
+            border-bottom: 1px solid var(--yellow);
+            border-left: 1px solid var(--yellow);
+        }
+        .score-box h4 {
+            padding: 0.25em 2em;
+            font-weight: 400;
+            font-size: 10vh;
+            margin: 0;
+        }
+    }
+
+    .face-readout {
+        position: absolute;
+        object-position: center;
+        object-fit: cover;
+        height: 100%;
+        width: 100%;
+    }
+
+    .voice {
+        .wave {
+            object-position: center;
+            object-fit: contain;
+            position: absolute;
+            height: 100%;
+            width: 100%;
+        }
+    }
+
+    .phrase {
+        padding-left: 4vh;
+    }
+    .awwwards-badge {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
     }
 }
 

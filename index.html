@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Straight Face-It</title>
     </head>
-    <body class="phase-01-active">
+    <body class="phase-02-active">
         <div id="container">
 
             <!-- Phase 1 - Splash -->
@@ -51,14 +51,14 @@
                             <div class="visual">
                                 <img src="/static/step-01.svg" />
                             </div>
-                            <p class="caption">Enable your camera and mic. we need to see and hear you for this to work</p>
+                            <p class="caption">Enable your camera and mic. we need to see and hear you for this to work.</p>
                         </div>
                         <div class="step-02">
                             <p class="number">01</p>
                             <div class="visual">
                                 <img src="/static/step-02.svg" />
                             </div>
-                            <p class="caption">Enable your camera and mic. we need to see and hear you for this to work</p>
+                            <p class="caption">Read each phrase aloud. speak clearly and remain as emotionless as keanu reeves. more even.</p>
                         </div>
                         <div class="step-03">
                             <p class="number">01</p>
@@ -69,7 +69,7 @@
                                     <path d="M460 460L-9.99998 -10" stroke="#F4FF00" stroke-width="3"/>
                                 </svg>
                             </div>
-                            <p class="caption">Enable your camera and mic. we need to see and hear you for this to work</p>
+                            <p class="caption">repeat. you get one point for each phrase you read without breaking your beautiful poker face.</p>
                         </div>
                     </div>
                     <button class="btn">I get it</button>
@@ -84,12 +84,46 @@
 
             <!-- Phase 3 - Calibration -->
             <div class="game-phase game-phase-03">
-            <h1>Mic/Camera Calibration</h1>
+                <h1>Mic/Camera Calibration</h1>
             </div>
 
             <!-- Phase 4 - Gameplay -->
             <div class="game-phase game-phase-04">
-            <h1>Gameplay</h1>
+                <div class="emotion-chart">
+                    <span class="label">Emotion Tracking</span>
+                </div>
+                <div class="play-header">
+                    <div class="left">
+                        <span class="label">Prompt</span>
+                        <span class="prompt">Repeat the following</span>
+                    </div>
+                    <div class="right">
+                        <div class="score-box">
+                            <span class="label">Score</span>
+                            <h4>000</h4>
+                        </div>
+                        <div class="reset-row">
+                            <a href="/">
+                                <span>Reset</span>
+                                <img src="/static/reset-arrow.svg" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="face-tracking">
+                    <span class="label">Face Tracking</span>
+                    <video class="face-readout"></video>
+                </div>
+                <div class="phrase">
+                    <h1>Not going to lie, that is the sexiest chinchilla i have ever seen.</h1>
+                    <a href="https://www.awwwards.com/academy/" target="_blank" class="awwwards-badge">
+                        <img src="/static/awwwards.svg" />
+                    </a>
+                </div>
+                <div class="voice">
+                    <span class="label">Voice Tracking</span>
+                    <canvas class="wave" width="500px" height="500px" />
+                </div>
             </div>
 
             <!-- Phase 5 - Game over -->

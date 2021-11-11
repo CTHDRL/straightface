@@ -1,13 +1,26 @@
 {
-  "name": "straight-face",
-  "version": "0.0.0",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "serve": "vite preview"
-  },
-  "devDependencies": {
-    "sass": "^1.43.2",
-    "vite": "^2.6.4"
-  }
+    "name": "straight-face",
+    "version": "0.0.0",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "serve": "vite preview"
+    },
+    "prettier": {
+        "tabWidth": 4,
+        "semi": false,
+        "singleQuote": true
+    },
+    "engines": {
+        "node": "12",
+        "npm": "7"
+    },
+    "devDependencies": {
+        "prettier": "^2.4.1",
+        "sass": "^1.43.2",
+        "vite": "^2.6.4"
+    },
+    "dependencies": {
+        "wavesurfer.js": "^5.2.0"
+    }
 }
