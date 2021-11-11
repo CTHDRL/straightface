@@ -3,13 +3,43 @@ body {
     --black: #000;
     --white: #FFF;
     background-color: var(--black);
-    color: var(--white);
-    font-family: 'Helvetica Neue';
+    color: var(--yellow);
+    font-family: monospace;
     margin: 0;
 }
 
 a {
     color: inherit;
+}
+
+.btn {
+    transition: color 200ms, background 200ms;
+    background-color: transparent;
+    border: 1px solid var(--yellow);
+    text-transform: uppercase;
+    color: var(--yellow);
+    border-radius: 2em;
+    padding: 0.6em 4em;
+    font-weight: 700;
+    font-size: 1.5vw;
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--yellow);
+        color: var(--black);
+    }
+}
+
+h1, h2, h3, .btn {
+    font-family: 'Helvetica Neue';
+}
+
+h1 {
+    text-transform: uppercase;
+    line-height: 0.85;
+    font-weight: 400;
+    font-size: 9vw;
+    margin: 0;
 }
 
 // Game phases
@@ -46,5 +76,67 @@ a {
 
     .academy-link {
         display: inline-block;
+    }
+}
+
+// phase 01
+.game-phase-01 {
+    .content {
+        text-align: center;
+        max-width: 75%;
+        margin: auto;
+    }
+    .byline {
+        text-transform: uppercase;
+        max-width: 275px;
+        margin: 40px auto;
+    }
+}
+
+// phase 02
+.game-phase-02 {
+    .content {
+        text-align: center;
+        max-width: 75%;
+        margin: auto;
+    }
+    .steps {
+        text-transform: uppercase;
+        grid-template-columns: 1fr 1fr 1fr;
+        text-align: left;
+        grid-gap: 20px;
+        display: grid;
+        margin-bottom: 50px;
+    }
+    .visual {
+        border: 1px solid var(--yellow);
+        position: relative;
+
+        img,svg {
+            position: absolute;
+            object-position: center;
+            object-fit: cover;
+            height: 100%;
+            width: 100%;
+        }
+
+        &::after {
+            padding-bottom: 100%;
+            display: block;
+            content: '';
+        }
+    }
+    .happy-spin {
+        animation: spin 8s linear infinite;
+        transform-origin: center;
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
     }
 }
