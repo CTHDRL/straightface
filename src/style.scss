@@ -244,6 +244,16 @@ h1 {
 
     .phrase {
         padding-left: 4vh;
+
+        h1 span {
+            display: inline-block;
+            color: var(--white);
+            margin: 0 0.15em;
+
+            &.spoken {
+                color: var(--yellow);
+            }
+        }
     }
     .awwwards-badge {
         position: absolute;
