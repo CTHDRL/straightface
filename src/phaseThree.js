@@ -1,19 +1,64 @@
+import _shuffle from 'lodash/shuffle'
 import { getStream } from './media'
+import { Buffer } from 'buffer'
+import phrases from './phrases'
+import io from './io'
 
 let videoLoaded = false
+let shuffledPhrases = _shuffle(phrases)
 
-const markWhiteList = [0, 1, 3]
+/**
+ * Accepts a Float32Array of audio data and converts it to a Buffer of l16 audio data (raw wav)
+ *
+ * Explanation for the math: The raw values captured from the Web Audio API are
+ * in 32-bit Floating Point, between -1 and 1 (per the specification).
+ * The values for 16-bit PCM range between -32768 and +32767 (16-bit signed integer).
+ * Filter & combine samples to reduce frequency, then multiply to by 0x7FFF (32767) to convert.
+ * Store in little endian.
+ *
+ * @param {Float32Array} input
+ * @return {Buffer}
+ */
+const floatTo16BitPCM = function (input) {
+    var output = new DataView(new ArrayBuffer(input.length * 2)) // length is in bytes (8-bit), so *2 to get 16-bit length
+    for (var i = 0; i < input.length; i++) {
+        var multiplier = input[i] < 0 ? 0x8000 : 0x7fff // 16-bit signed range is -32768 to 32767
+        output.setInt16(i * 2, (input[i] * multiplier) | 0, true) // index, value, little edian
+    }
+    return Buffer.from(output.buffer)
+}
+
+// Pull next phrase from shuffled array and set
+const setNextPhrase = () => {
+    const nextPhrase = shuffledPhrases.pop()
+
+    // Clear out all phrases
+    const phraseArea = document.querySelector('.phrase h1')
+    while (phraseArea.firstChild) {
+        phraseArea.removeChild(phraseArea.firstChild)
+    }
+
+    const spans = nextPhrase.split(' ').filter(Boolean)
+    for (let i in spans) {
+        const spanWord = spans[i]
+        const span = document.createElement('span')
+        span.innerText = spanWord
+        phraseArea.appendChild(span)
+    }
+}
+
+// Draw face landmarks onto video
 const drawFaceLandmarks = (predictions) => {
     const dots = [...document.querySelectorAll('svg.landmarks circle')]
     const marks = predictions[0]?.landmarks || []
     const tl = predictions[0]?.topLeft || [0, 0]
 
-    // helper to place
+    // helper to place a single landmark dot
     const placeDot = (dot, mark) => {
         dot.setAttribute('transform', `translate(${mark[0]}, ${mark[1]})`)
     }
 
-    // Place 3 dots
+    // Place 3 landmarks
     placeDot(dots[0], marks[0])
     placeDot(dots[1], marks[1])
     placeDot(dots[2], marks[3])
@@ -44,6 +89,9 @@ export default async () => {
         await new Promise((res) => setTimeout(res, 100))
         videoLoaded = true
     }
+
+    // Display phrase for user
+    setNextPhrase()
 
     // Waveform visualizer
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)()
@@ -85,12 +133,45 @@ export default async () => {
     }
     draw()
 
+    // ==== WORKING
+
+    const scriptNode = audioCtx.createScriptProcessor(4096, 1, 1)
+    source.connect(scriptNode)
+    scriptNode.connect(audioCtx.destination)
+
+    // create socket connection
+    const connection = io('localhost:5000')
+    const { socket } = connection
+
+    // set up socket connection
+    socket.emit('audio.transcript.connect')
+    // socket.on('audio.transcript.result', (data) => {
+    //     emitter.emit('data', data)
+    // })
+
+    // binary data handler
+    scriptNode.onaudioprocess = (stream) => {
+        // if (!emitter.listenerCount('data')) return
+        const left = stream.inputBuffer.getChannelData(0)
+        const wavData = floatTo16BitPCM(left)
+        if (socket && !socket.disconnected) {
+            socket.emit('audio.transcript.data', wavData)
+        }
+    }
+
     // canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
     const model = await blazeface.load()
 
     // Face detection loop
-    setInterval(async () => {
+    let faceInterval = setInterval(async () => {
+        // class removed, clear
+        if (!document.body.classList.contains('tracking')) {
+            return clearInterval(faceInterval)
+        }
+
+        // class still there, if video is loaded...
         if (videoLoaded) {
+            // draw preditions to video
             const predictions = await model.estimateFaces(video)
             drawFaceLandmarks(predictions)
         }
