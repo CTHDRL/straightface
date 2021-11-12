@@ -137,7 +137,6 @@ h1 {
 }
 
 .game-phase-04 {
-    display: grid;
     grid-template-columns: 350px 1fr;
     grid-template-rows: auto 1fr 1fr;
     min-height: 100vh;
@@ -213,12 +212,22 @@ h1 {
         }
     }
 
-    .face-readout {
+    .face-readout,
+    .landmarks {
         position: absolute;
         object-position: center;
         object-fit: cover;
         height: 100%;
         width: 100%;
+    }
+    .landmarks {
+        circle {
+            transition: transform 100ms linear;
+            stroke-width: 2px;
+            stroke: var(--yellow);
+            fill: transparent;
+            // fill: var(--yellow);
+        }
     }
 
     .voice {

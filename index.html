@@ -159,8 +159,23 @@
                     </div>
                 </div>
                 <div class="face-tracking">
-                    <span class="label">Face Tracking</span>
                     <video class="face-readout" muted></video>
+                    <svg
+                        class="landmarks"
+                        width="640"
+                        height="480"
+                        viewBox="0 0 640 480"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <circle cx="0" cy="0" r="6" />
+                        <circle cx="0" cy="0" r="6" />
+                        <circle cx="0" cy="0" r="6" />
+                        <circle cx="0" cy="0" r="6" />
+                        <circle cx="0" cy="0" r="6" />
+                        <circle cx="0" cy="0" r="6" />
+                    </svg>
+
+                    <span class="label">Face Tracking</span>
                 </div>
                 <div class="phrase">
                     <h1>
@@ -187,6 +202,11 @@
             </div>
         </div>
 
+        <!-- Tensorflow -->
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
+
+        <!-- Main Script -->
         <script type="module" src="/src/main.js"></script>
     </body>
 </html>
