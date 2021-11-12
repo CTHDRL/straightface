@@ -8,15 +8,15 @@ const drawFaceLandmarks = (predictions) => {
     const marks = predictions[0]?.landmarks || []
     const tl = predictions[0]?.topLeft || [0, 0]
 
-    for (let i in marks) {
-        if (!markWhiteList.includes(parseInt(i))) continue
-        const mark = marks[i]
-        dots[i].setAttribute('transform', `translate(${mark[0]}, ${mark[1]})`)
-        // dots[i].setAttribute('cx', mark[0])
-        // dots[i].setAttribute('cy', mark[1])
-
-        // console.log(dots[i], mark)
+    // helper to place
+    const placeDot = (dot, mark) => {
+        dot.setAttribute('transform', `translate(${mark[0]}, ${mark[1]})`)
     }
+
+    // Place 3 dots
+    placeDot(dots[0], marks[0])
+    placeDot(dots[1], marks[1])
+    placeDot(dots[2], marks[3])
 }
 
 // Init phase 03
