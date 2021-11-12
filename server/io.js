@@ -1,4 +1,4 @@
-const watsonStream = require('./watson')
+const googleStream = require('./google')
 // const facePlusPlus = require('../services/facePlusPlus')
 const ss = require('socket.io-stream')
 const _ = require('lodash')
@@ -34,7 +34,7 @@ module.exports = {
         // })
 
         // init streams
-        let wtStream = null
+        let gsStream = null
 
         // internal vars
         let disconnected = false
@@ -49,17 +49,19 @@ module.exports = {
         // looping speech connection
         const startConnection = () => {
             clearTimeout(timer)
-            wtStream = watsonStream()
+            // wtStream = watsonStream()
+            //     .on('error', streamError)
+            //     .on('data', (data) => {
+            //         // do something with this data
+            //         client.emit('audio.transcript.result', data)
+            //     })
+            gsStream = googleStream()
                 .on('error', streamError)
                 .on('data', (data) => {
                     // do something with this data
                     client.emit('audio.transcript.result', data)
+                    console.log('analysis data: ', data)
                 })
-            // gsStream = googleStream()
-            //     .on('error', streamError)
-            //     .on('data', data => {
-            //
-            //     })
 
             // enforce 60 sec timeout
             timer = setTimeout(() => {
@@ -73,14 +75,14 @@ module.exports = {
 
         // on data
         client.on('audio.transcript.data', (data) => {
-            if (wtStream !== null) wtStream.write(data)
+            if (gsStream !== null) gsStream.write(data)
         })
 
         // disconnect google
         const disconnectSpeech = () => {
-            if (wtStream !== null) {
-                wtStream.end()
-                wtStream = null
+            if (gsStream !== null) {
+                gsStream.end()
+                gsStream = null
             }
         }
 

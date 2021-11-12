@@ -23,6 +23,7 @@
         "vite": "^2.6.4"
     },
     "dependencies": {
+        "@google-cloud/speech": "^4.9.0",
         "@tensorflow-models/blazeface": "^0.0.7",
         "buffer": "^6.0.3",
         "dotenv": "^10.0.0",

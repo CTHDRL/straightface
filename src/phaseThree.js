@@ -55,6 +55,7 @@ const drawFaceLandmarks = (predictions) => {
 
     // helper to place a single landmark dot
     const placeDot = (dot, mark) => {
+        if (!mark || !dot) return
         dot.setAttribute('transform', `translate(${mark[0]}, ${mark[1]})`)
     }
 
@@ -145,9 +146,11 @@ export default async () => {
 
     // set up socket connection
     socket.emit('audio.transcript.connect')
-    // socket.on('audio.transcript.result', (data) => {
-    //     emitter.emit('data', data)
-    // })
+    socket.on('audio.transcript.result', (data) => {
+        console.log('Got transcribed audio', data)
+        // === TODO NEXT: Compare this transcript with the ===
+        // === current target text. Cross off words, change phrase, etc. ===
+    })
 
     // binary data handler
     scriptNode.onaudioprocess = (stream) => {
