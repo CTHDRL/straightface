@@ -1,3 +1,4 @@
+const { createServer: createViteServer } = require('vite')
 const dotenv = require('dotenv')
 dotenv.config()
 
@@ -20,11 +21,18 @@ io.on('error', (err) => {
     console.log('Caught Socket ERR:', err)
 })
 
-// Static app
-// app.use(express.static('dist'))
+// Start server
+;(async () => {
+    // Create Vite server in middleware mode.
+    const vite = await createViteServer({
+        server: { middlewareMode: 'html' },
+    })
 
-// start server
-const port = process.env.PORT || 5000
-server.listen(port, () => {
-    console.log(`listening on port ${port}...`)
-})
+    // Use vite's connect instance as middleware
+    app.use(vite.middlewares)
+
+    const port = process.env.PORT || 3000
+    server.listen(port, () => {
+        console.log(`listening on port ${port}...`)
+    })
+})()

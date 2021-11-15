@@ -141,7 +141,7 @@ export default async () => {
     scriptNode.connect(audioCtx.destination)
 
     // create socket connection
-    const connection = io('localhost:5000')
+    const connection = io('localhost:3000')
     const { socket } = connection
 
     // set up socket connection
@@ -150,6 +150,14 @@ export default async () => {
         console.log('Got transcribed audio', data)
         // === TODO NEXT: Compare this transcript with the ===
         // === current target text. Cross off words, change phrase, etc. ===
+    })
+
+    // client-side
+    socket.on('connect', () => {
+        console.log(socket.id) // x8WIv7-mJelg7on_ALbx
+    })
+    socket.on('disconnect', () => {
+        console.log(socket.id) // undefined
     })
 
     // binary data handler

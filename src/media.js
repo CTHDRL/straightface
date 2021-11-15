@@ -6,7 +6,7 @@ export const getStream = async () => {
     try {
         stream = await navigator.mediaDevices.getUserMedia({
             video: { width: 640, height: 480, facingMode: 'user' },
-            audio: true
+            audio: true,
         })
 
         // "Remember" that we have access to this device

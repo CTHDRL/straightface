@@ -2,10 +2,10 @@
     "name": "straight-face",
     "version": "0.0.0",
     "scripts": {
-        "dev": "vite",
+        "dev": "nodemon server",
         "build": "vite build",
         "serve": "vite preview",
-        "server": "nodemon server"
+        "start": "node server"
     },
     "prettier": {
         "tabWidth": 4,
