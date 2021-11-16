@@ -82,6 +82,20 @@ const drawFaceLandmarks = (predictions) => {
     placeDot(dots[2], marks[3])
 }
 
+// Draw emotions onto chart
+const drawEmotionChart = (emotions) => {
+    const chart = document.querySelector('.emotion-chart')
+    if (chart) {
+        // chart.style.setProperty('--neutral', emotions.neutral)
+        chart.style.setProperty('--happiness', emotions.happiness + '%')
+        chart.style.setProperty('--anger', emotions.anger + '%')
+        chart.style.setProperty('--disgust', emotions.disgust + '%')
+        chart.style.setProperty('--fear', emotions.fear + '%')
+        chart.style.setProperty('--sadness', emotions.sadness + '%')
+        chart.style.setProperty('--surprise', emotions.surprise + '%')
+    }
+}
+
 // Init phase 03
 export default async () => {
     // Get user media
@@ -127,6 +141,7 @@ export default async () => {
 
                 // If detected emotions...
                 if (emotions) {
+                    drawEmotionChart(emotions)
                 }
             } catch (err) {
                 console.log('Error detecting emotion: ', err)

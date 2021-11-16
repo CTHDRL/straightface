@@ -172,6 +172,42 @@ h1 {
 
     .emotion-chart {
         padding-bottom: 30px;
+        padding: 50px 10px 30px;
+
+        .emotion-table {
+            text-transform: uppercase;
+            grid-template-columns: auto 1fr;
+            grid-gap: 10px;
+            display: grid;
+        }
+        .emote-bar {
+            background-color: var(--yellow);
+            position: relative;
+        }
+        .amount {
+            transition: 100ms width linear;
+            position: absolute;
+            background-color: var(--white);
+            height: 100%;
+            left: 0;
+            top: 0;
+
+            &.happiness {
+                width: var(--happiness);
+            }
+            &.surprise {
+                width: var(--surprise);
+            }
+            &.sadness {
+                width: var(--sadness);
+            }
+            &.disgust {
+                width: var(--disgust);
+            }
+            &.anger {
+                width: var(--anger);
+            }
+        }
     }
 
     .play-header {
