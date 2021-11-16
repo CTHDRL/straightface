@@ -1,11 +1,15 @@
 import _shuffle from 'lodash/shuffle'
 import { getStream } from './media'
+import FuzzySet from 'fuzzyset.js'
 import { Buffer } from 'buffer'
 import phrases from './phrases'
+import _get from 'lodash/get'
 import io from './io'
 
 let videoLoaded = false
 let shuffledPhrases = _shuffle(phrases)
+let activePhrase = ''
+let pointerWord = 0
 
 /**
  * Accepts a Float32Array of audio data and converts it to a Buffer of l16 audio data (raw wav)
@@ -28,9 +32,19 @@ const floatTo16BitPCM = function (input) {
     return Buffer.from(output.buffer)
 }
 
+const cleanStrip = (text) => {
+    if (!text) return []
+    return String(text)
+        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '')
+        .split(' ')
+        .filter(Boolean)
+        .map((w) => w.toLowerCase())
+}
+
 // Pull next phrase from shuffled array and set
 const setNextPhrase = () => {
-    const nextPhrase = shuffledPhrases.pop()
+    activePhrase = shuffledPhrases.pop()
+    pointerWord = 0
 
     // Clear out all phrases
     const phraseArea = document.querySelector('.phrase h1')
@@ -38,7 +52,7 @@ const setNextPhrase = () => {
         phraseArea.removeChild(phraseArea.firstChild)
     }
 
-    const spans = nextPhrase.split(' ').filter(Boolean)
+    const spans = activePhrase.split(' ').filter(Boolean)
     for (let i in spans) {
         const spanWord = spans[i]
         const span = document.createElement('span')
@@ -147,7 +161,50 @@ export default async () => {
     // set up socket connection
     socket.emit('audio.transcript.connect')
     socket.on('audio.transcript.result', (data) => {
-        console.log('Got transcribed audio', data)
+        if (!activePhrase) return
+        const processedPhrase = cleanStrip(activePhrase)
+
+        const transcript = _get(data, 'results[0].alternatives[0].transcript')
+        const transcriptWords = cleanStrip(transcript)
+        const transcriptSet = FuzzySet(transcriptWords)
+
+        const targetWord = console.log(transcriptWords)
+
+        let shouldBreak = false
+        while (!shouldBreak) {
+            const targetWord = processedPhrase[pointerWord]
+
+            const searchResult = transcriptSet.get(targetWord)
+            const isFound = searchResult && _get(searchResult, '[0][0]') > 0.6
+            console.log(
+                targetWord,
+                'isFound: ',
+                isFound,
+                _get(searchResult, '[0][0]')
+            )
+            if (isFound) {
+                const phraseSpans = [
+                    ...document.querySelectorAll('.phrase h1 span'),
+                ]
+                if (phraseSpans[pointerWord]) {
+                    phraseSpans[pointerWord].classList.add('spoken')
+                    pointerWord++
+
+                    // reached end
+                    if (pointerWord > processedPhrase.length - 1) {
+                        shouldBreak = true
+                        document.body.classList.add('celebrate')
+                        setTimeout(() => {
+                            document.body.classList.remove('celebrate')
+                            setNextPhrase()
+                        }, 1500)
+                    }
+                }
+            } else {
+                shouldBreak = true
+            }
+        }
+
         // === TODO NEXT: Compare this transcript with the ===
         // === current target text. Cross off words, change phrase, etc. ===
     })

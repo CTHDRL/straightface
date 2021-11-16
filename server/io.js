@@ -60,7 +60,7 @@ module.exports = {
                 .on('data', (data) => {
                     // do something with this data
                     client.emit('audio.transcript.result', data)
-                    console.log('analysis data: ', data)
+                    // console.log('analysis data: ', data)
                 })
 
             // enforce 60 sec timeout
