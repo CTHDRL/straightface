@@ -1,37 +1,68 @@
+const facePlusPlus = require('./facePlusPlus')
 const googleStream = require('./google')
-// const facePlusPlus = require('../services/facePlusPlus')
 const ss = require('socket.io-stream')
 const _ = require('lodash')
 
-// serializers
-// const faceAnalyzerSerializer = require('../serializers/facePlusAnalyze')
-// const faceDetectSerializer = require('../serializers/facePlusDetect')
-// const googleSerializer = require('../serializers/googleSpeech')
+// FacePlusPlus Serializers
+const serializeFaceDetect = (data) => {
+    return {
+        id: data.image_id,
+        faces: data.faces.map((face) => {
+            return {
+                rectangle: face.face_rectangle,
+                token: face.face_token,
+            }
+        }),
+    }
+}
+const serializeFaceAnalyze = (data) => {
+    return {
+        people: _.get(data, 'faces', []).map((face) => {
+            const landmark = face.landmark || {}
+            return {
+                person_id: face.face_token,
+                demographics: {
+                    gender: _.get(face, 'attributes.gender.value', 'unknown'),
+                    age: _.get(face, 'attributes.age.value', 'unknown'),
+                },
+                emotions: _.get(face, 'attributes.emotion', {}),
+                landmarks: Object.keys(landmark).map((key) => {
+                    const pos = landmark[key]
+                    return {
+                        [key]: pos,
+                    }
+                }),
+                rectangle: face.face_rectangle,
+            }
+        }),
+    }
+}
 
 module.exports = {
     connection(client) {
         console.log('new socket connection')
 
-        // // Listen for video snapshots
-        // ss(client).on('video.analysis.snapshot', async stream => {
-        //     try {
-        //         const detectData = await facePlusPlus.detect(stream)
-        //         const detectFormatted = faceDetectSerializer(detectData)
-        //         client.emit('video.detect.result', detectFormatted)
-        //
-        //         // if we have any faces, get the first token and analyze
-        //         const token = _.get(detectFormatted, 'faces[0].token')
-        //         if (token) {
-        //             const analysisData = await facePlusPlus.analyze(token)
-        //             client.emit(
-        //                 'video.analysis.result',
-        //                 faceAnalyzerSerializer(analysisData)
-        //             )
-        //         }
-        //     } catch (err) {
-        //         client.emit('server.error', err)
-        //     }
-        // })
+        // Listen for video snapshots
+        client.on('video.analysis.snapshot', async (dataURL) => {
+            try {
+                const detectData = await facePlusPlus.detect(dataURL)
+                const detectFormatted = serializeFaceDetect(detectData)
+                client.emit('video.detect.result', detectFormatted)
+
+                // if we have any faces, get the first token and analyze
+                const token = _.get(detectFormatted, 'faces[0].token')
+                if (token) {
+                    const analysisData = await facePlusPlus.analyze(token)
+                    client.emit(
+                        'video.analysis.result',
+                        serializeFaceAnalyze(analysisData)
+                    )
+                }
+            } catch (err) {
+                console.log('err: ', err)
+                client.emit('server.error', err)
+            }
+        })
 
         // init streams
         let gsStream = null

@@ -6,7 +6,7 @@ export default [
     `Always the bridesmaid, never the weirdly hot lunch lady`,
     `Stop right there! There's a mosquito on your change pocket`,
     `Don't you ever grab my wiffle balls`,
-    `The princess WILL NOT be eating the fruitcake`,
+    `The princess WILL NOT be eating the fruit cake`,
     `Never underestimate the power of backup socks`,
     `Iron your sheets or pay the price!`,
     `I'll never forgive you for taking my stride `,

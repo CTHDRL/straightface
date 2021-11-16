@@ -1,4 +1,5 @@
 import _shuffle from 'lodash/shuffle'
+import detectEmotion from './emotion'
 import { getStream } from './media'
 import FuzzySet from 'fuzzyset.js'
 import { Buffer } from 'buffer'
@@ -32,6 +33,8 @@ const floatTo16BitPCM = function (input) {
     return Buffer.from(output.buffer)
 }
 
+// Helper to clean punctuation from
+// phrase and split it by word
 const cleanStrip = (text) => {
     if (!text) return []
     return String(text)
@@ -96,13 +99,39 @@ export default async () => {
     const landmarkSVG = document.querySelector('svg.landmarks')
     landmarkSVG.setAttribute('viewBox', `0 0 ${streamW} ${streamH}`)
 
+    // create socket connection
+    const connection = io('localhost:3000')
+    const { socket } = connection
+
     // Show video feed
     var video = document.querySelector('video.face-readout')
+    video.dataset.streamWidth = streamW
+    video.dataset.streamHeight = streamH
     video.srcObject = stream
     video.onloadedmetadata = async () => {
         video.play()
         await new Promise((res) => setTimeout(res, 100))
         videoLoaded = true
+
+        // Emotion detection loop
+        let emotionInterval = setInterval(async () => {
+            // class removed, clear
+            if (!document.body.classList.contains('tracking')) {
+                return clearInterval(emotionInterval)
+            }
+
+            // Detect emotion on this video still
+            try {
+                const emotionData = await detectEmotion(video, socket)
+                const emotions = _get(emotionData, 'people[0].emotions')
+
+                // If detected emotions...
+                if (emotions) {
+                }
+            } catch (err) {
+                console.log('Error detecting emotion: ', err)
+            }
+        }, 1500)
     }
 
     // Display phrase for user
@@ -148,15 +177,9 @@ export default async () => {
     }
     draw()
 
-    // ==== WORKING
-
     const scriptNode = audioCtx.createScriptProcessor(4096, 1, 1)
     source.connect(scriptNode)
     scriptNode.connect(audioCtx.destination)
-
-    // create socket connection
-    const connection = io('localhost:3000')
-    const { socket } = connection
 
     // set up socket connection
     socket.emit('audio.transcript.connect')
