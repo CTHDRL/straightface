@@ -2,11 +2,34 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <link rel="icon" type="image/svg+xml" href="/static/favicon.png" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.png" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Straight Face-It</title>
     </head>
-    <body class="phase-02-active">
+    <body class="phase-01-active">
+        <!-- Game Over Overlay -->
+        <div class="game-over-modal">
+            <div class="centered">
+                <h1>Game Over</h1>
+                <div class="score-row">
+                    <span class="score-label">Your Score: </span>
+                    <span class="score-value"></span>
+                </div>
+                <div class="game-over-copy">
+                    <span>Whoops! you were too </span>
+                    <span class="emotion"></span>
+                    <span>
+                        to make it to the next phrase. Share your failure with
+                        the world, or try again.
+                    </span>
+                </div>
+                <div class="button-row">
+                    <button class="go-share btn">Share</button>
+                    <a href="/" class="go-repeat btn">Try Again</a>
+                </div>
+            </div>
+        </div>
+
         <div id="container">
             <!-- Phase 1 - Splash -->
             <div class="game-phase game-phase-01 has-hf">
@@ -16,7 +39,7 @@
                         target="_blank"
                         class="logo-link"
                     >
-                        <img src="/static/logo.svg" />
+                        <img src="/logo.svg" />
                     </a>
                 </header>
 
@@ -41,7 +64,7 @@
                         target="_blank"
                         class="academy-link"
                     >
-                        <img src="/static/awwwards.svg" />
+                        <img src="/awwwards.svg" />
                     </a>
                 </footer>
             </div>
@@ -54,7 +77,7 @@
                         target="_blank"
                         class="logo-link"
                     >
-                        <img src="/static/logo.svg" />
+                        <img src="/logo.svg" />
                     </a>
                 </header>
 
@@ -63,7 +86,7 @@
                         <div class="step-01">
                             <p class="number">01</p>
                             <div class="visual">
-                                <img src="/static/step-01.svg" />
+                                <img src="/step-01.svg" />
                             </div>
                             <p class="caption">
                                 Enable your camera and mic. we need to see and
@@ -73,7 +96,7 @@
                         <div class="step-02">
                             <p class="number">01</p>
                             <div class="visual">
-                                <img src="/static/step-02.svg" />
+                                <img src="/step-02.svg" />
                             </div>
                             <p class="caption">
                                 Read each phrase aloud. speak clearly and remain
@@ -125,7 +148,7 @@
                         target="_blank"
                         class="academy-link"
                     >
-                        <img src="/static/awwwards.svg" />
+                        <img src="/awwwards.svg" />
                     </a>
                 </footer>
             </div>
@@ -175,7 +198,7 @@
                         <div class="reset-row">
                             <a href="/">
                                 <span>Reset</span>
-                                <img src="/static/reset-arrow.svg" />
+                                <img src="/reset-arrow.svg" />
                             </a>
                         </div>
                     </div>
@@ -203,7 +226,7 @@
                         target="_blank"
                         class="awwwards-badge"
                     >
-                        <img src="/static/awwwards.svg" />
+                        <img src="/awwwards.svg" />
                     </a>
                 </div>
                 <div class="voice">
@@ -221,9 +244,6 @@
         <!-- Tensorflow -->
         <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
         <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
-
-        <!-- Deps -->
-        <script src="/static/socket.io-stream.js"></script>
 
         <!-- Main Script -->
         <script type="module" src="/src/main.js"></script>

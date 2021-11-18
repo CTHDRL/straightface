@@ -1,6 +1,5 @@
 const facePlusPlus = require('./facePlusPlus')
 const googleStream = require('./google')
-const ss = require('socket.io-stream')
 const _ = require('lodash')
 
 // FacePlusPlus Serializers
@@ -40,8 +39,6 @@ const serializeFaceAnalyze = (data) => {
 
 module.exports = {
     connection(client) {
-        console.log('new socket connection')
-
         // Listen for video snapshots
         client.on('video.analysis.snapshot', async (dataURL) => {
             try {
@@ -64,13 +61,11 @@ module.exports = {
             }
         })
 
-        // init streams
-        let gsStream = null
-
         // internal vars
         let disconnected = false
         let timer = null
 
+        // Handle error, log and pass to client
         const streamError = (err) => {
             console.log(`STREAM ERR: ${err}`)
             client.emit('server.error', err)
@@ -80,18 +75,12 @@ module.exports = {
         // looping speech connection
         const startConnection = () => {
             clearTimeout(timer)
-            // wtStream = watsonStream()
-            //     .on('error', streamError)
-            //     .on('data', (data) => {
-            //         // do something with this data
-            //         client.emit('audio.transcript.result', data)
-            //     })
+
             gsStream = googleStream()
                 .on('error', streamError)
                 .on('data', (data) => {
                     // do something with this data
                     client.emit('audio.transcript.result', data)
-                    // console.log('analysis data: ', data)
                 })
 
             // enforce 60 sec timeout
@@ -120,7 +109,6 @@ module.exports = {
         // Fully kill connection
         const killConnection = () => {
             if (!disconnected) {
-                console.log('Connection end.')
                 disconnected = true
                 disconnectSpeech()
             }

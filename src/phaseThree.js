@@ -7,10 +7,16 @@ import phrases from './phrases'
 import _get from 'lodash/get'
 import io from './io'
 
-let videoLoaded = false
-let shuffledPhrases = _shuffle(phrases)
-let activePhrase = ''
-let pointerWord = 0
+// Constants
+const VALID_EMOTIONS = ['happiness', 'anger', 'disgust', 'sadness', 'surprise']
+const EMOTION_THRESHOLD = 66 // between 0 - 100, impossible - easy
+
+// Init vars
+let videoLoaded = false,
+    shuffledPhrases = _shuffle(phrases),
+    activePhrase = '',
+    pointerWord = 0,
+    score = 0
 
 /**
  * Accepts a Float32Array of audio data and converts it to a Buffer of l16 audio data (raw wav)
@@ -31,6 +37,36 @@ const floatTo16BitPCM = function (input) {
         output.setInt16(i * 2, (input[i] * multiplier) | 0, true) // index, value, little edian
     }
     return Buffer.from(output.buffer)
+}
+
+// Helper to
+const tenseMap = {
+    happiness: 'happy',
+    sadness: 'sad',
+    anger: 'angry',
+    disgust: 'disgusted',
+    surprise: 'surprised',
+}
+const gameOver = (score, emotion, socket) => {
+    document.body.classList.remove('tracking')
+
+    // Set score into "Game Over" screen
+    document.body.querySelector('.game-over-modal .score-value').innerText =
+        String(score).padStart(3, '0')
+
+    // Set emotion in correct tense
+    document.body.querySelector(
+        '.game-over-modal .game-over-copy .emotion'
+    ).innerText = tenseMap[emotion]
+
+    // Pause webcam video
+    document.body.querySelector('.face-tracking video').pause()
+
+    // Disconnect socket if needed
+    if (socket) socket.disconnect()
+
+    // Show game over screen
+    document.body.classList.add('game-over')
 }
 
 // Helper to clean punctuation from
@@ -64,6 +100,12 @@ const setNextPhrase = () => {
     }
 }
 
+// Helper to render current score
+const setScore = () => {
+    const scoreText = document.querySelector('.score-box h4')
+    scoreText.innerText = String(score).padStart(3, '0')
+}
+
 // Draw face landmarks onto video
 const drawFaceLandmarks = (predictions) => {
     const dots = [...document.querySelectorAll('svg.landmarks circle')]
@@ -83,16 +125,28 @@ const drawFaceLandmarks = (predictions) => {
 }
 
 // Draw emotions onto chart
-const drawEmotionChart = (emotions) => {
+const drawEmotionChart = (emotionData) => {
     const chart = document.querySelector('.emotion-chart')
     if (chart) {
-        // chart.style.setProperty('--neutral', emotions.neutral)
-        chart.style.setProperty('--happiness', emotions.happiness + '%')
-        chart.style.setProperty('--anger', emotions.anger + '%')
-        chart.style.setProperty('--disgust', emotions.disgust + '%')
-        chart.style.setProperty('--fear', emotions.fear + '%')
-        chart.style.setProperty('--sadness', emotions.sadness + '%')
-        chart.style.setProperty('--surprise', emotions.surprise + '%')
+        // Loop emotions and set var value for each
+        const emotionBars = VALID_EMOTIONS.map((emotion) =>
+            document.querySelector(`.emote-bar .amount.${emotion}`)
+        )
+
+        for (let i in VALID_EMOTIONS) {
+            const emotion = VALID_EMOTIONS[i]
+            const value = emotionData[emotion]
+            chart.style.setProperty(`--${emotion}`, value + '%')
+
+            if (value > 66 && !emotionBars[i].classList.contains('alert')) {
+                emotionBars[i].classList.add('alert')
+            } else if (
+                value < 66 &&
+                emotionBars[i].classList.contains('alert')
+            ) {
+                emotionBars[i].classList.remove('alert')
+            }
+        }
     }
 }
 
@@ -127,6 +181,8 @@ export default async () => {
         await new Promise((res) => setTimeout(res, 100))
         videoLoaded = true
 
+        let emotionLimitTimer, isOverLimit
+
         // Emotion detection loop
         let emotionInterval = setInterval(async () => {
             // class removed, clear
@@ -139,6 +195,25 @@ export default async () => {
                 const emotionData = await detectEmotion(video, socket)
                 const emotions = _get(emotionData, 'people[0].emotions')
 
+                // Check if we're over the emotion threshold,
+                // set game end timer accordingly
+                const overLimitCheck = Object.keys(emotions).find((emotion) => {
+                    return (
+                        VALID_EMOTIONS.includes(emotion) &&
+                        emotions[emotion] > 66
+                    )
+                })
+                if (!isOverLimit && overLimitCheck) {
+                    clearTimeout(emotionLimitTimer)
+                    emotionLimitTimer = setTimeout(() => {
+                        gameOver(score, overLimitCheck, socket)
+                    }, 2600)
+                    isOverLimit = true
+                } else if (isOverLimit && !overLimitCheck) {
+                    clearTimeout(emotionLimitTimer)
+                    isOverLimit = false
+                }
+
                 // If detected emotions...
                 if (emotions) {
                     drawEmotionChart(emotions)
@@ -146,7 +221,7 @@ export default async () => {
             } catch (err) {
                 console.log('Error detecting emotion: ', err)
             }
-        }, 1500)
+        }, 1200)
     }
 
     // Display phrase for user
@@ -234,6 +309,8 @@ export default async () => {
                         document.body.classList.add('celebrate')
                         setTimeout(() => {
                             document.body.classList.remove('celebrate')
+                            score++
+                            setScore()
                             setNextPhrase()
                         }, 1500)
                     }
@@ -242,17 +319,6 @@ export default async () => {
                 shouldBreak = true
             }
         }
-
-        // === TODO NEXT: Compare this transcript with the ===
-        // === current target text. Cross off words, change phrase, etc. ===
-    })
-
-    // client-side
-    socket.on('connect', () => {
-        console.log(socket.id) // x8WIv7-mJelg7on_ALbx
-    })
-    socket.on('disconnect', () => {
-        console.log(socket.id) // undefined
     })
 
     // binary data handler

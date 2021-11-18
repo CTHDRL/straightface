@@ -45,6 +45,50 @@ h1 {
     margin: 0;
 }
 
+// Game over - overlay
+// show
+body:not(.game-over) .game-over-modal {
+    transition: none;
+    pointer-events: none;
+    opacity: 0;
+}
+.game-over-modal {
+    transition: opacity 400ms;
+    background-color: rgba(#000, 0.75);
+    position: fixed;
+    display: flex;
+    z-index: 20;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    top: 0;
+
+    .centered {
+        text-transform: uppercase;
+        text-align: center;
+        margin: auto;
+    }
+    .score-row {
+        font-family: 'Helvetica Neue';
+        margin: 20px auto;
+        font-weight: 700;
+        font-size: 24px;
+    }
+    .game-over-copy {
+        max-width: 350px;
+        margin: 20px auto;
+    }
+    .emotion {
+        text-decoration: underline;
+    }
+    .button-row {
+        margin: 40px auto;
+    }
+    .go-repeat {
+        text-decoration: none;
+    }
+}
+
 // Game phases
 .game-phase {
     display: none;
@@ -185,12 +229,18 @@ h1 {
             position: relative;
         }
         .amount {
-            transition: 100ms width linear;
+            transition: 800ms width linear, background-color 600ms linear;
             position: absolute;
             background-color: var(--white);
             height: 100%;
             left: 0;
             top: 0;
+
+            &.alert {
+                animation: blink 500ms linear infinite;
+                animation-delay: 2s;
+                background-color: red;
+            }
 
             &.happiness {
                 width: var(--happiness);
