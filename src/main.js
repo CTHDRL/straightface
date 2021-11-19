@@ -1,6 +1,6 @@
+import './style.scss'
 import initPhaseTwo from './phaseTwo'
 import initPhaseThree from './PhaseThree'
-import './style.scss'
 
 // Listen for main CTA click
 const phaseOneBtn = document.querySelector('.game-phase-01 button')

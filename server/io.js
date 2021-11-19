@@ -2,6 +2,8 @@ const facePlusPlus = require('./facePlusPlus')
 const googleStream = require('./google')
 const _ = require('lodash')
 
+let gsStream
+
 // FacePlusPlus Serializers
 const serializeFaceDetect = (data) => {
     return {

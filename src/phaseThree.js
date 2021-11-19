@@ -1,5 +1,6 @@
 import _shuffle from 'lodash/shuffle'
 import detectEmotion from './emotion'
+import copy from 'copy-to-clipboard'
 import { getStream } from './media'
 import FuzzySet from 'fuzzyset.js'
 import { Buffer } from 'buffer'
@@ -64,6 +65,27 @@ const gameOver = (score, emotion, socket) => {
 
     // Disconnect socket if needed
     if (socket) socket.disconnect()
+
+    // Set share text
+    const shareButton = document.querySelector('.game-over-modal .go-share')
+    if (shareButton) {
+        // Set up share data
+        const shareData = {
+            title: 'Say It! With a Straight Face',
+            text: `I scored ${score} points on Say It! With a Straight Face, but was too ${tenseMap[emotion]} to score any higher. See if you can beat me.`,
+            url: window.location.origin,
+        }
+
+        // Catch share button click, native share
+        shareButton.addEventListener('click', async () => {
+            try {
+                await navigator.share(shareData)
+            } catch (err) {
+                copy(`${shareData.text}\n\n${shareData.url}`)
+                alert('Copied text to clipboard')
+            }
+        })
+    }
 
     // Show game over screen
     document.body.classList.add('game-over')
