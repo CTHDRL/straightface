@@ -1,9 +1,9 @@
+import audioToBuffer from './audioToBuffer'
 import _shuffle from 'lodash/shuffle'
 import detectEmotion from './emotion'
 import copy from 'copy-to-clipboard'
 import { getStream } from './media'
 import FuzzySet from 'fuzzyset.js'
-import { Buffer } from 'buffer'
 import phrases from './phrases'
 import _get from 'lodash/get'
 import io from './io'
@@ -18,78 +18,6 @@ let videoLoaded = false,
     activePhrase = '',
     pointerWord = 0,
     score = 0
-
-/**
- * Accepts a Float32Array of audio data and converts it to a Buffer of l16 audio data (raw wav)
- *
- * Explanation for the math: The raw values captured from the Web Audio API are
- * in 32-bit Floating Point, between -1 and 1 (per the specification).
- * The values for 16-bit PCM range between -32768 and +32767 (16-bit signed integer).
- * Filter & combine samples to reduce frequency, then multiply to by 0x7FFF (32767) to convert.
- * Store in little endian.
- *
- * @param {Float32Array} input
- * @return {Buffer}
- */
-const floatTo16BitPCM = function (input) {
-    var output = new DataView(new ArrayBuffer(input.length * 2)) // length is in bytes (8-bit), so *2 to get 16-bit length
-    for (var i = 0; i < input.length; i++) {
-        var multiplier = input[i] < 0 ? 0x8000 : 0x7fff // 16-bit signed range is -32768 to 32767
-        output.setInt16(i * 2, (input[i] * multiplier) | 0, true) // index, value, little edian
-    }
-    return Buffer.from(output.buffer)
-}
-
-// Helper to
-const tenseMap = {
-    happiness: 'happy',
-    sadness: 'sad',
-    anger: 'angry',
-    disgust: 'disgusted',
-    surprise: 'surprised',
-}
-const gameOver = (score, emotion, socket) => {
-    document.body.classList.remove('tracking')
-
-    // Set score into "Game Over" screen
-    document.body.querySelector('.game-over-modal .score-value').innerText =
-        String(score).padStart(3, '0')
-
-    // Set emotion in correct tense
-    document.body.querySelector(
-        '.game-over-modal .game-over-copy .emotion'
-    ).innerText = tenseMap[emotion]
-
-    // Pause webcam video
-    document.body.querySelector('.face-tracking video').pause()
-
-    // Disconnect socket if needed
-    if (socket) socket.disconnect()
-
-    // Set share text
-    const shareButton = document.querySelector('.game-over-modal .go-share')
-    if (shareButton) {
-        // Set up share data
-        const shareData = {
-            title: 'Say It! With a Straight Face',
-            text: `I scored ${score} points on Say It! With a Straight Face, but was too ${tenseMap[emotion]} to score any higher. See if you can beat me.`,
-            url: window.location.origin,
-        }
-
-        // Catch share button click, native share
-        shareButton.addEventListener('click', async () => {
-            try {
-                await navigator.share(shareData)
-            } catch (err) {
-                copy(`${shareData.text}\n\n${shareData.url}`)
-                alert('Copied text to clipboard')
-            }
-        })
-    }
-
-    // Show game over screen
-    document.body.classList.add('game-over')
-}
 
 // Helper to clean punctuation from
 // phrase and split it by word
@@ -178,7 +106,7 @@ export default async () => {
     const stream = await getStream()
 
     document.body.classList.remove('phase-02-active')
-    document.body.classList.add('phase-04-active')
+    document.body.classList.add('phase-03-active')
 
     // Set tracking class
     document.body.classList.add('tracking')
@@ -347,7 +275,7 @@ export default async () => {
     scriptNode.onaudioprocess = (stream) => {
         // if (!emitter.listenerCount('data')) return
         const left = stream.inputBuffer.getChannelData(0)
-        const wavData = floatTo16BitPCM(left)
+        const wavData = audioToBuffer(left)
         if (socket && !socket.disconnected) {
             socket.emit('audio.transcript.data', wavData)
         }

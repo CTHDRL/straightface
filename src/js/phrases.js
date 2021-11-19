@@ -33,5 +33,4 @@ export default [
     `Why can't you be more like my exwife?`,
     `The sun came at me today, it has zero chill`,
     `Once best known for rapping, now best at napping`,
-    `"One more for good luck" I reasoned while placing the 37th and final eggplant emoji in my Hinge bio`,
 ]
