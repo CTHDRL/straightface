@@ -1,6 +1,7 @@
+import drawFaceLandmarks from './drawFaceLandmarks'
+import VALID_EMOTIONS from './validEmotions'
 import audioToBuffer from './audioToBuffer'
 import _shuffle from 'lodash/shuffle'
-import detectEmotion from './emotion'
 import copy from 'copy-to-clipboard'
 import { getStream } from './media'
 import FuzzySet from 'fuzzyset.js'
@@ -9,7 +10,6 @@ import _get from 'lodash/get'
 import io from './io'
 
 // Constants
-const VALID_EMOTIONS = ['happiness', 'anger', 'disgust', 'sadness', 'surprise']
 const EMOTION_THRESHOLD = 66 // between 0 - 100, impossible - easy
 
 // Init vars
@@ -56,50 +56,6 @@ const setScore = () => {
     scoreText.innerText = String(score).padStart(3, '0')
 }
 
-// Draw face landmarks onto video
-const drawFaceLandmarks = (predictions) => {
-    const dots = [...document.querySelectorAll('svg.landmarks circle')]
-    const marks = predictions[0]?.landmarks || []
-    const tl = predictions[0]?.topLeft || [0, 0]
-
-    // helper to place a single landmark dot
-    const placeDot = (dot, mark) => {
-        if (!mark || !dot) return
-        dot.setAttribute('transform', `translate(${mark[0]}, ${mark[1]})`)
-    }
-
-    // Place 3 landmarks
-    placeDot(dots[0], marks[0])
-    placeDot(dots[1], marks[1])
-    placeDot(dots[2], marks[3])
-}
-
-// Draw emotions onto chart
-const drawEmotionChart = (emotionData) => {
-    const chart = document.querySelector('.emotion-chart')
-    if (chart) {
-        // Loop emotions and set var value for each
-        const emotionBars = VALID_EMOTIONS.map((emotion) =>
-            document.querySelector(`.emote-bar .amount.${emotion}`)
-        )
-
-        for (let i in VALID_EMOTIONS) {
-            const emotion = VALID_EMOTIONS[i]
-            const value = emotionData[emotion]
-            chart.style.setProperty(`--${emotion}`, value + '%')
-
-            if (value > 66 && !emotionBars[i].classList.contains('alert')) {
-                emotionBars[i].classList.add('alert')
-            } else if (
-                value < 66 &&
-                emotionBars[i].classList.contains('alert')
-            ) {
-                emotionBars[i].classList.remove('alert')
-            }
-        }
-    }
-}
-
 // Init phase 03
 export default async () => {
     // Get user media
@@ -131,46 +87,9 @@ export default async () => {
         await new Promise((res) => setTimeout(res, 100))
         videoLoaded = true
 
-        let emotionLimitTimer, isOverLimit
-
         // Emotion detection loop
-        let emotionInterval = setInterval(async () => {
-            // class removed, clear
-            if (!document.body.classList.contains('tracking')) {
-                return clearInterval(emotionInterval)
-            }
-
-            // Detect emotion on this video still
-            try {
-                const emotionData = await detectEmotion(video, socket)
-                const emotions = _get(emotionData, 'people[0].emotions')
-
-                // Check if we're over the emotion threshold,
-                // set game end timer accordingly
-                const overLimitCheck = Object.keys(emotions).find((emotion) => {
-                    return (
-                        VALID_EMOTIONS.includes(emotion) &&
-                        emotions[emotion] > 66
-                    )
-                })
-                if (!isOverLimit && overLimitCheck) {
-                    clearTimeout(emotionLimitTimer)
-                    emotionLimitTimer = setTimeout(() => {
-                        gameOver(score, overLimitCheck, socket)
-                    }, 2600)
-                    isOverLimit = true
-                } else if (isOverLimit && !overLimitCheck) {
-                    clearTimeout(emotionLimitTimer)
-                    isOverLimit = false
-                }
-
-                // If detected emotions...
-                if (emotions) {
-                    drawEmotionChart(emotions)
-                }
-            } catch (err) {
-                console.log('Error detecting emotion: ', err)
-            }
+        let emotionInterval = setInterval(() => {
+            detectAndDrawEmotions(video, socket, emotionInterval)
         }, 1200)
     }
 
