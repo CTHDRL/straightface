@@ -1,6 +1,7 @@
 import drawEmotionChart from './drawEmotionChart'
 import VALID_EMOTIONS from './validEmotions'
 import detectEmotion from './detectEmotion'
+import gameOver from './gameOver'
 import _get from 'lodash/get'
 
 let emotionLimitTimer, isOverLimit
@@ -23,9 +24,11 @@ export default async (video, socket, emotionInterval) => {
         })
         if (!isOverLimit && overLimitCheck) {
             clearTimeout(emotionLimitTimer)
+            const score =
+                document.querySelector('.score-box').dataset.score || 0
             emotionLimitTimer = setTimeout(() => {
                 gameOver(score, overLimitCheck, socket)
-            }, 2600)
+            }, 1200)
             isOverLimit = true
         } else if (isOverLimit && !overLimitCheck) {
             clearTimeout(emotionLimitTimer)

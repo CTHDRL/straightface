@@ -1,3 +1,5 @@
+import copy from 'copy-to-clipboard'
+
 // Helper to translate detected emotion
 // to the correct tense for the copy.
 const tenseMap = {

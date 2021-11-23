@@ -7,6 +7,15 @@ body {
     font-family: monospace;
     margin: 0;
 }
+// Text selection
+::selection {
+    color: #ebebe3;
+    background: #222;
+}
+::-moz-selection {
+    color: #ebebe3;
+    background: #222;
+}
 
 // link/buttons
 a {
