@@ -36,6 +36,10 @@
         padding-bottom: 30px;
         padding: 50px 10px 30px;
 
+        .emote-label {
+            font-family: 'Helvetica Neue';
+            font-weight: 500;
+        }
         .emotion-table {
             text-transform: uppercase;
             grid-template-columns: auto 1fr;
