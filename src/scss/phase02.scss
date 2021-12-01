@@ -1,0 +1,39 @@
+// phase 02
+.game-phase-02 {
+    .content {
+        text-align: center;
+        max-width: 75%;
+        margin: auto;
+    }
+    .steps {
+        text-transform: uppercase;
+        grid-template-columns: 1fr 1fr 1fr;
+        text-align: left;
+        grid-gap: 20px;
+        display: grid;
+        margin-bottom: 50px;
+    }
+    .visual {
+        border: 1px solid var(--yellow);
+        position: relative;
+
+        img,
+        svg {
+            position: absolute;
+            object-position: center;
+            object-fit: cover;
+            height: 100%;
+            width: 100%;
+        }
+
+        &::after {
+            padding-bottom: 100%;
+            display: block;
+            content: '';
+        }
+    }
+    .happy-spin {
+        animation: spin 8s linear infinite;
+        transform-origin: center;
+    }
+}
