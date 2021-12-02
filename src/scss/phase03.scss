@@ -1,0 +1,177 @@
+.game-phase-03 {
+    grid-template-columns: 350px 1fr;
+    grid-template-rows: auto 1fr 1fr;
+    min-height: 100vh;
+
+    h1 {
+        font-size: 12vh;
+    }
+
+    // structure
+    > * {
+        position: relative;
+    }
+    .phrase {
+        grid-row: span 2;
+    }
+    .emotion-chart,
+    .face-tracking {
+        border-bottom: 1px solid var(--yellow);
+    }
+    .emotion-chart,
+    .face-tracking,
+    .voice {
+        border-right: 1px solid var(--yellow);
+    }
+
+    .label {
+        position: absolute;
+        font-size: 14px;
+        text-transform: uppercase;
+        left: 10px;
+        top: 10px;
+    }
+
+    .emotion-chart {
+        padding-bottom: 30px;
+        padding: 50px 10px 30px;
+
+        .emote-label {
+            font-family: 'Helvetica Neue';
+            font-weight: 500;
+        }
+        .emotion-table {
+            text-transform: uppercase;
+            grid-template-columns: auto 1fr;
+            grid-gap: 10px;
+            display: grid;
+        }
+        .emote-bar {
+            background-color: var(--yellow);
+            position: relative;
+        }
+        .amount {
+            transition: 600ms width linear, background-color 700ms linear;
+            position: absolute;
+            background-color: var(--white);
+            height: 100%;
+            left: 0;
+            top: 0;
+
+            &.alert {
+                animation: blink 500ms linear infinite;
+                animation-delay: 2s;
+                background-color: red;
+            }
+
+            &.happiness {
+                width: var(--happiness);
+            }
+            &.surprise {
+                width: var(--surprise);
+            }
+            &.sadness {
+                width: var(--sadness);
+            }
+            &.disgust {
+                width: var(--disgust);
+            }
+            &.anger {
+                width: var(--anger);
+            }
+        }
+    }
+
+    .play-header {
+        grid-template-columns: 1fr auto;
+        display: grid;
+
+        > * {
+            position: relative;
+        }
+        .left {
+            display: flex;
+
+            .prompt {
+                text-transform: uppercase;
+                font-size: 20px;
+                padding-left: 4vh;
+                margin-bottom: auto;
+                margin-top: auto;
+            }
+        }
+        .reset-row {
+            text-align: right;
+            padding: 10px;
+
+            a {
+                text-decoration: none;
+            }
+        }
+        .score-box {
+            border-bottom: 1px solid var(--yellow);
+            border-left: 1px solid var(--yellow);
+        }
+        .score-box h4 {
+            padding: 0.25em 2em;
+            font-weight: 400;
+            font-size: 10vh;
+            margin: 0;
+        }
+    }
+    .celebrate & .score-box h4 {
+        animation: blink 600ms linear infinite;
+    }
+
+    .face-readout,
+    .landmarks {
+        position: absolute;
+        object-position: center;
+        object-fit: contain;
+        height: 100%;
+        width: 100%;
+    }
+    .landmarks {
+        circle {
+            transition: transform 100ms linear;
+            stroke-width: 2px;
+            stroke: var(--yellow);
+            fill: transparent;
+        }
+    }
+
+    .voice {
+        .wave {
+            object-position: center;
+            object-fit: contain;
+            position: absolute;
+            height: 100%;
+            width: 100%;
+        }
+        .label {
+            z-index: 5;
+        }
+    }
+
+    .celebrate & .phrase h1 {
+        animation: blink 600ms linear infinite;
+    }
+    .phrase {
+        padding-left: 4vh;
+
+        h1 span {
+            display: inline-block;
+            color: var(--white);
+            margin: 0 0.15em;
+
+            &.spoken {
+                color: var(--yellow);
+            }
+        }
+    }
+    .awwwards-badge {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+    }
+}

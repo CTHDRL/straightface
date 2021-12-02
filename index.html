@@ -129,6 +129,83 @@
                     </a>
                 </footer>
             </div>
+
+            <!-- Phase 3 - Gameplay -->
+            <div class="game-phase game-phase-03">
+                <div class="emotion-chart">
+                    <span class="label">Emotion Tracking</span>
+                    <div class="emotion-table">
+                        <span class="emote-label">Happy</span>
+                        <div class="emote-bar">
+                            <span class="amount happiness"></span>
+                        </div>
+                        <span class="emote-label">Surprised</span>
+                        <div class="emote-bar">
+                            <span class="amount surprise"></span>
+                        </div>
+                        <span class="emote-label">Sad</span>
+                        <div class="emote-bar">
+                            <span class="amount sadness"></span>
+                        </div>
+                        <span class="emote-label">Disgusted</span>
+                        <div class="emote-bar">
+                            <span class="amount disgust"></span>
+                        </div>
+                        <span class="emote-label">Angry</span>
+                        <div class="emote-bar">
+                            <span class="amount anger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="play-header">
+                    <div class="left">
+                        <span class="label">Prompt</span>
+                        <span class="prompt">Repeat the following</span>
+                    </div>
+                    <div class="right">
+                        <div class="score-box">
+                            <span class="label">Score</span>
+                            <h4>000</h4>
+                        </div>
+                        <div class="reset-row">
+                            <a href="/">
+                                <span>Reset</span>
+                                <img src="/reset-arrow.svg" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="face-tracking">
+                    <video class="face-readout" muted></video>
+                    <svg
+                        class="landmarks"
+                        width="640"
+                        height="480"
+                        viewBox="0 0 640 480"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <circle cx="-100" cy="-100" r="6" />
+                        <circle cx="-100" cy="-100" r="6" />
+                        <circle cx="-100" cy="-100" r="6" />
+                    </svg>
+
+                    <span class="label">Face Tracking</span>
+                </div>
+                <div class="phrase">
+                    <h1></h1>
+                    <a
+                        href="https://www.awwwards.com/academy/"
+                        target="_blank"
+                        class="awwwards-badge"
+                    >
+                        <img src="/awwwards.svg" />
+                    </a>
+                </div>
+                <div class="voice">
+                    <span class="label">Voice Tracking</span>
+                    <canvas class="wave" width="500px" height="500px" />
+                </div>
+            </div>
         </div>
 
         <!-- Tensorflow -->
