@@ -1,7 +1,7 @@
 let stream
 
 // Get video stream, requesting access if need be
-export const getStream = async () => {
+export default () => {
     if (stream) return stream
     try {
         stream = await navigator.mediaDevices.getUserMedia({

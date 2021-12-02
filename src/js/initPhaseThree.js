@@ -4,7 +4,7 @@ import drawFaceLandmarks from './drawFaceLandmarks'
 import audioToBuffer from './audioToBuffer'
 import setNextPhrase from './setNextPhrase'
 import onTranscript from './onTranscript'
-import { getStream } from './media'
+import getStream from './getStream'
 import io from './io'
 
 // Constants
