@@ -7,6 +7,29 @@
         <title>Say It! With a Straight Face</title>
     </head>
     <body class="phase-01-active">
+        <!-- Game Over Overlay -->
+        <div class="game-over-modal">
+            <div class="centered">
+                <h1>Game Over</h1>
+                <div class="score-row">
+                    <span class="score-label">Your Score: </span>
+                    <span class="score-value"></span>
+                </div>
+                <div class="game-over-copy">
+                    <span>Whoops! you were too </span>
+                    <span class="emotion"></span>
+                    <span>
+                        to make it to the next phrase. Share your failure with
+                        the world, or try again.
+                    </span>
+                </div>
+                <div class="button-row">
+                    <button class="go-share btn">Share</button>
+                    <a href="/" class="go-repeat btn">Try Again</a>
+                </div>
+            </div>
+        </div>
+
         <div id="container">
             <!-- Phase 1 - Splash -->
             <div class="game-phase game-phase-01 has-hf">

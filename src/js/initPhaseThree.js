@@ -1,6 +1,7 @@
 import initAudioVisualizer from './initAudioVisualizer'
 import setNextPhrase from './setNextPhrase'
 import getStream from './getStream'
+import gameOver from './gameOver'
 
 // Init phase 03
 export default async () => {
