@@ -1,7 +1,7 @@
 let stream
 
 // Get video stream, requesting access if need be
-export default () => {
+export default async () => {
     if (stream) return stream
     try {
         stream = await navigator.mediaDevices.getUserMedia({
@@ -9,16 +9,14 @@ export default () => {
             audio: true,
         })
 
-        // "Remember" that we have access to this device
-        // Cookies.set('has_allowed_media', true, { expires: 365 * 100 })
-        // faceEvents.$emit('user_allowed_media')
-
         // Return stream
         return stream
     } catch (err) {
         // Denied, or no camera
         console.log('Failed to get user media')
-        // Cookies.remove('has_allowed_media')
+        alert(
+            'You must grant access to your camera and microphone to play the game.'
+        )
         return false
     }
 }
