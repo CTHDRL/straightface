@@ -5,7 +5,7 @@ import audioToBuffer from './audioToBuffer'
 import setNextPhrase from './setNextPhrase'
 import onTranscript from './onTranscript'
 import getStream from './getStream'
-import io from './io'
+import io from 'socket.io-client'
 
 // Constants
 const EMOTION_THRESHOLD = 66, // between 0 - 100, impossible - easy
@@ -33,8 +33,7 @@ export default async () => {
     landmarkSVG.setAttribute('viewBox', `0 0 ${streamW} ${streamH}`)
 
     // create socket connection
-    const connection = io()
-    const { socket } = connection
+    const socket = io()
 
     // Show video feed
     var video = document.querySelector('video.face-readout')
