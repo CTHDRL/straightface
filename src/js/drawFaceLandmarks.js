@@ -2,7 +2,6 @@
 export default (predictions) => {
     const dots = [...document.querySelectorAll('svg.landmarks circle')]
     const marks = predictions[0]?.landmarks || []
-    const tl = predictions[0]?.topLeft || [0, 0]
 
     // helper to place a single landmark dot
     const placeDot = (dot, mark) => {
