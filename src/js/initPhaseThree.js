@@ -1,8 +1,10 @@
 import initAudioVisualizer from './initAudioVisualizer'
 import drawFaceLandmarks from './drawFaceLandmarks'
 import setNextPhrase from './setNextPhrase'
+import audioToBuffer from './audioToBuffer'
 import getStream from './getStream'
 import gameOver from './gameOver'
+import io from 'socket.io-client'
 
 const TF_FRAME_RATE = 10
 
@@ -26,6 +28,9 @@ export default async () => {
     const landmarkSVG = document.querySelector('svg.landmarks')
     landmarkSVG.setAttribute('viewBox', `0 0 ${streamW} ${streamH}`)
 
+    // create socket connection
+    const socket = io()
+
     // Show video feed
     var video = document.querySelector('video.face-readout')
     video.dataset.streamWidth = streamW
@@ -44,6 +49,34 @@ export default async () => {
     // Start drawing the waveforms of the stream
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)()
     const source = initAudioVisualizer(audioCtx, stream)
+
+    // Create new audio processor and feed stream audio into it
+    const scriptNode = audioCtx.createScriptProcessor(4096, 1, 1)
+    source.connect(scriptNode)
+    scriptNode.connect(audioCtx.destination)
+
+    // Signal that the browser is ready to
+    // start sending audio
+    socket.emit('audio.transcript.connect')
+
+    // Handle transcripts that are sent back from the server
+    socket.on('audio.transcript.result', (data) => {
+        console.log('Transcript data: ', data)
+    })
+
+    // When the audio processor gets new audio data...
+    scriptNode.onaudioprocess = (stream) => {
+        // Pull raw audio data from the left channel,
+        // convert it into a Buffer
+        const left = stream.inputBuffer.getChannelData(0)
+        const wavData = audioToBuffer(left)
+
+        // Assuming we are still connected,
+        // send the raw data to the server
+        if (socket && !socket.disconnected) {
+            socket.emit('audio.transcript.data', wavData)
+        }
+    }
 
     // Load the TensorFlow face detection
     // model (this takes a second)
