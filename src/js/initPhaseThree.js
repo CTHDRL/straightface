@@ -1,3 +1,4 @@
+import detectAndDrawEmotions from './detectAndDrawEmotions'
 import initAudioVisualizer from './initAudioVisualizer'
 import drawFaceLandmarks from './drawFaceLandmarks'
 import setNextPhrase from './setNextPhrase'
@@ -7,7 +8,8 @@ import getStream from './getStream'
 import gameOver from './gameOver'
 import io from 'socket.io-client'
 
-const TF_FRAME_RATE = 10
+const TF_FRAME_RATE = 10,
+    EMOTION_FRAME_RATE = 2
 
 // Init vars
 let videoLoaded = false
@@ -41,6 +43,16 @@ export default async () => {
         video.play()
         await new Promise((res) => setTimeout(res, 100))
         videoLoaded = true
+
+        // Init emotion detection loop
+        let emotionInterval = setInterval(() => {
+            // class removed, clear
+            if (!document.body.classList.contains('tracking')) {
+                return clearInterval(emotionInterval)
+            }
+
+            detectAndDrawEmotions(video, socket)
+        }, 1000 / EMOTION_FRAME_RATE)
     }
 
     // Display initial phrase

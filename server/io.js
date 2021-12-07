@@ -1,7 +1,43 @@
+const facePlusPlus = require('./facePlusPlus')
 const googleStream = require('./google')
 const _ = require('lodash')
 
 let gsStream
+
+// FacePlusPlus Serializers
+const serializeFaceDetect = (data) => {
+    return {
+        id: data.image_id,
+        faces: data.faces.map((face) => {
+            return {
+                rectangle: face.face_rectangle,
+                token: face.face_token,
+            }
+        }),
+    }
+}
+const serializeFaceAnalyze = (data) => {
+    return {
+        people: _.get(data, 'faces', []).map((face) => {
+            const landmark = face.landmark || {}
+            return {
+                person_id: face.face_token,
+                demographics: {
+                    gender: _.get(face, 'attributes.gender.value', 'unknown'),
+                    age: _.get(face, 'attributes.age.value', 'unknown'),
+                },
+                emotions: _.get(face, 'attributes.emotion', {}),
+                landmarks: Object.keys(landmark).map((key) => {
+                    const pos = landmark[key]
+                    return {
+                        [key]: pos,
+                    }
+                }),
+                rectangle: face.face_rectangle,
+            }
+        }),
+    }
+}
 
 module.exports = {
     connection(client) {
@@ -15,6 +51,28 @@ module.exports = {
             client.emit('server.error', err)
         }
         client.on('error', streamError)
+
+        // Listen for video snapshots
+        client.on('video.analysis.snapshot', async (dataURL) => {
+            try {
+                const detectData = await facePlusPlus.detect(dataURL)
+                const detectFormatted = serializeFaceDetect(detectData)
+                client.emit('video.detect.result', detectFormatted)
+
+                // if we have any faces, get the first token and analyze
+                const token = _.get(detectFormatted, 'faces[0].token')
+                if (token) {
+                    const analysisData = await facePlusPlus.analyze(token)
+                    client.emit(
+                        'video.analysis.result',
+                        serializeFaceAnalyze(analysisData)
+                    )
+                }
+            } catch (err) {
+                console.log('err: ', err)
+                client.emit('error', err)
+            }
+        })
 
         // looping speech connection
         const startConnection = () => {
