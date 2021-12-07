@@ -43,9 +43,8 @@ export default async (video, socket) => {
     // Return promise
     return new Promise((resolve, reject) => {
         if (socket && !socket.disconnected) {
-            // stream blob to server for analysis
+            // Send image to server for analysis
             socket.emit('video.analysis.snapshot', imageURL)
-            // ss.createBlobReadStream(blob).pipe(blobStream)
 
             // Handle result and unlisten
             const onData = (data) => {

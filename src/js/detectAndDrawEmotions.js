@@ -6,12 +6,7 @@ import _get from 'lodash/get'
 
 let emotionLimitTimer, isOverLimit
 
-export default async (video, socket, emotionInterval) => {
-    // class removed, clear
-    if (!document.body.classList.contains('tracking')) {
-        return clearInterval(emotionInterval)
-    }
-
+export default async (video, socket) => {
     // Detect emotion on this video still
     try {
         const emotionData = await detectEmotion(video, socket)

@@ -47,7 +47,12 @@ export default async () => {
 
         // Init emotion detection loop
         let emotionInterval = setInterval(() => {
-            detectAndDrawEmotions(video, socket, emotionInterval)
+            // class removed, clear
+            if (!document.body.classList.contains('tracking')) {
+                return clearInterval(emotionInterval)
+            }
+
+            detectAndDrawEmotions(video, socket)
         }, 500)
     }
 
