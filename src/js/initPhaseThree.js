@@ -2,6 +2,7 @@ import initAudioVisualizer from './initAudioVisualizer'
 import drawFaceLandmarks from './drawFaceLandmarks'
 import setNextPhrase from './setNextPhrase'
 import audioToBuffer from './audioToBuffer'
+import onTranscript from './onTranscript'
 import getStream from './getStream'
 import gameOver from './gameOver'
 import io from 'socket.io-client'
@@ -60,9 +61,7 @@ export default async () => {
     socket.emit('audio.transcript.connect')
 
     // Handle transcripts that are sent back from the server
-    socket.on('audio.transcript.result', (data) => {
-        console.log('Transcript data: ', data)
-    })
+    socket.on('audio.transcript.result', onTranscript)
 
     // When the audio processor gets new audio data...
     scriptNode.onaudioprocess = (stream) => {
