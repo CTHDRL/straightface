@@ -5,17 +5,6 @@ let canvas, ctx
 // Resolution of video snapshot
 const SNAP_RES = 150
 
-// canvas blob promise helper
-const canvasToBlob = (canvas) => {
-    return new Promise((resolve, reject) => {
-        try {
-            return canvas.toBlob(resolve, 'image/jpeg', 0.5)
-        } catch (e) {
-            return reject(e)
-        }
-    })
-}
-
 export default async (video, socket) => {
     // Set up canvas  if  not set up yet
     if (!canvas) {
