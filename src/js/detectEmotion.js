@@ -48,6 +48,9 @@ export default async (video, socket) => {
             // Wait for video analysis result
             socket.on('video.analysis.result', onData)
             socket.on('error', onError)
+        } else {
+            // No connection, error
+            return reject('No socket connection.')
         }
     })
 }
