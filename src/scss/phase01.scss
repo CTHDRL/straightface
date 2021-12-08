@@ -1,13 +1,3 @@
-:root {
-    --mouse-x: 0;
-    --mouse-y: 0;
-}
-body.reduced-motion {
-    * {
-        transition: none !important;
-    }
-}
-
 // phase 01
 .game-phase-01 {
     --image-height: 152px;
@@ -34,6 +24,10 @@ body.reduced-motion {
         transform: scale(1.1)
             translate(calc(var(--mouse-x) * 1%), calc(var(--mouse-y) * 1%));
         transition: transform 0.1s, opacity 0.3s;
+
+        body.reduced-motion & {
+            transform: none;
+        }
 
         &:not(.visible) {
             opacity: 0;
