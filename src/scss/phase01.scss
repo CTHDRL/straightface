@@ -1,7 +1,12 @@
 // phase 01
 .game-phase-01 {
+    --image-height: 64px;
+
     & > * {
         position: relative;
+    }
+    .background {
+        overflow: hidden;
     }
     .background,
     .fullscreen-background {
@@ -16,6 +21,18 @@
     .fullscreen-background {
         object-fit: cover;
     }
+    .bouncing-container {
+        width: 64px;
+        height: 100%;
+        position: absolute;
+        animation: bounce-y 2.3s linear infinite alternate;
+
+        .bouncing {
+            width: 64px;
+            height: var(--image-height);
+            animation: bounce-x 5.4s linear infinite alternate;
+        }
+    }
     .content {
         text-align: center;
         max-width: 75%;
@@ -25,5 +42,22 @@
         text-transform: uppercase;
         max-width: 275px;
         margin: 40px auto;
+    }
+}
+
+@keyframes bounce-x {
+    0% {
+        transform: none;
+    }
+    100% {
+        transform: translateX(calc(100vw - 100%));
+    }
+}
+@keyframes bounce-y {
+    0% {
+        transform: none;
+    }
+    100% {
+        transform: translateY(calc(100% - var(--image-height)));
     }
 }
