@@ -1,3 +1,5 @@
+@import 'vars';
+
 body {
     --yellow: #f4ff00;
     --black: #000;
@@ -36,6 +38,10 @@ a {
     &:hover {
         background-color: var(--yellow);
         color: var(--black);
+    }
+
+    @include bp {
+        font-size: 4.3vw;
     }
 }
 
