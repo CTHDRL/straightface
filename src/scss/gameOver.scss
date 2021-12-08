@@ -1,3 +1,5 @@
+@import 'vars';
+
 // Game over - overlay
 body:not(.game-over) .game-over-modal {
     transition: none;
@@ -35,6 +37,11 @@ body:not(.game-over) .game-over-modal {
     }
     .button-row {
         margin: 40px auto;
+
+        @include bp {
+            display: grid;
+            grid-row-gap: 10px;
+        }
     }
     .go-repeat {
         text-decoration: none;
