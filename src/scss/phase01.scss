@@ -1,3 +1,13 @@
+:root {
+    --mouse-x: 0;
+    --mouse-y: 0;
+}
+body.reduced-motion {
+    * {
+        transition: none !important;
+    }
+}
+
 // phase 01
 .game-phase-01 {
     --image-height: 152px;
@@ -21,6 +31,13 @@
     .fullscreen-background {
         object-fit: cover;
         opacity: 0.3;
+        transform: scale(1.1)
+            translate(calc(var(--mouse-x) * 1%), calc(var(--mouse-y) * 1%));
+        transition: transform 0.1s, opacity 0.3s;
+
+        &:not(.visible) {
+            opacity: 0;
+        }
     }
     .bouncing-container {
         width: var(--image-height);
