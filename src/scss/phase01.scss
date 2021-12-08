@@ -1,6 +1,6 @@
 // phase 01
 .game-phase-01 {
-    --image-height: 64px;
+    --image-height: 152px;
 
     & > * {
         position: relative;
@@ -22,13 +22,13 @@
         object-fit: cover;
     }
     .bouncing-container {
-        width: 64px;
+        width: var(--image-height);
         height: 100%;
         position: absolute;
         animation: bounce-y 2.3s linear infinite alternate;
 
         .bouncing {
-            width: 64px;
+            width: var(--image-height);
             height: var(--image-height);
             animation: bounce-x 5.4s linear infinite alternate;
         }
