@@ -179,13 +179,25 @@
     .phrase {
         padding-left: 4vh;
 
-        h1 span {
-            display: inline-block;
-            color: var(--white);
-            margin: 0 0.15em;
+        @include bp {
+            grid-row-start: 2;
+            padding: 0 10px 25px;
+            border-bottom: 1px solid var(--yellow);
+        }
 
-            &.spoken {
-                color: var(--yellow);
+        h1 {
+            @include bp {
+                font-size: 48px;
+                margin-top: 15px;
+            }
+            span {
+                display: inline-block;
+                color: var(--white);
+                margin: 0 0.15em;
+
+                &.spoken {
+                    color: var(--yellow);
+                }
             }
         }
     }
