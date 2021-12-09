@@ -206,4 +206,15 @@
         bottom: 10px;
         right: 10px;
     }
+    .face-tracking {
+        @include bp {
+            grid-row-start: 3;
+        }
+    }
+    .voice {
+        @include bp {
+            grid-row-start: 5;
+            min-height: 150px;
+        }
+    }
 }
