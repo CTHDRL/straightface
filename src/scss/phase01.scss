@@ -1,5 +1,50 @@
 // phase 01
 .game-phase-01 {
+    --image-height: 152px;
+
+    & > * {
+        position: relative;
+    }
+    .background {
+        overflow: hidden;
+    }
+    .background,
+    .fullscreen-background {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    .fullscreen-background {
+        object-fit: cover;
+        opacity: 0.3;
+        transform: scale(1.1)
+            translate(calc(var(--mouse-x) * 1%), calc(var(--mouse-y) * 1%));
+        transition: transform 0.1s, opacity 0.3s;
+
+        body.reduced-motion & {
+            transform: none;
+        }
+
+        &:not(.visible) {
+            opacity: 0;
+        }
+    }
+    .bouncing-container {
+        width: var(--image-height);
+        height: 100%;
+        position: absolute;
+        animation: bounce-y 2.3s linear infinite alternate;
+
+        .bouncing {
+            width: var(--image-height);
+            height: var(--image-height);
+            animation: bounce-x 5.4s linear infinite alternate;
+        }
+    }
     .content {
         text-align: center;
         max-width: 75%;
@@ -9,5 +54,22 @@
         text-transform: uppercase;
         max-width: 275px;
         margin: 40px auto;
+    }
+}
+
+@keyframes bounce-x {
+    0% {
+        transform: none;
+    }
+    100% {
+        transform: translateX(calc(100vw - 100%));
+    }
+}
+@keyframes bounce-y {
+    0% {
+        transform: none;
+    }
+    100% {
+        transform: translateY(calc(100% - var(--image-height)));
     }
 }

@@ -1,0 +1,30 @@
+$breakpoints: (
+    xl: (
+        min-width: 1100px,
+    ),
+    l: (
+        max-width: 992px,
+    ),
+    m: (
+        max-width: 840px,
+    ),
+    s: (
+        max-width: 850px,
+    ),
+    xs: (
+        max-width: 480px,
+    ),
+);
+
+@mixin bp($name: 's') {
+    $value: map-get($breakpoints, $name);
+    @if map-has-key($breakpoints, $name) {
+        @media #{inspect(map-get($breakpoints, $name))} {
+            @content;
+        }
+    } @else {
+        @media (max-width: #{$name}) {
+            @content;
+        }
+    }
+}

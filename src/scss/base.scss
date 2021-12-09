@@ -1,3 +1,16 @@
+@import 'vars';
+
+:root {
+    --mouse-x: 0;
+    --mouse-y: 0;
+}
+body.reduced-motion {
+    * {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
 body {
     --yellow: #f4ff00;
     --black: #000;
@@ -36,6 +49,10 @@ a {
     &:hover {
         background-color: var(--yellow);
         color: var(--black);
+    }
+
+    @include bp {
+        font-size: 4.3vw;
     }
 }
 

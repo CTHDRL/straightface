@@ -3,6 +3,11 @@
     grid-template-rows: auto 1fr 1fr;
     min-height: 100vh;
 
+    @include bp {
+        grid-template-columns: 100%;
+        border: 1px solid var(--yellow);
+    }
+
     h1 {
         font-size: 12vh;
     }
@@ -86,6 +91,12 @@
         grid-template-columns: 1fr auto;
         display: grid;
 
+        @include bp {
+            grid-row-start: 1;
+            grid-template-columns: 1fr auto;
+            column-gap: 10px;
+        }
+
         > * {
             position: relative;
         }
@@ -98,6 +109,11 @@
                 padding-left: 4vh;
                 margin-bottom: auto;
                 margin-top: auto;
+
+                @include bp {
+                    padding-left: 10px;
+                    margin-bottom: 35px;
+                }
             }
         }
         .reset-row {
@@ -117,6 +133,10 @@
             font-weight: 400;
             font-size: 10vh;
             margin: 0;
+
+            @include bp {
+                padding: 0.25em 40px;
+            }
         }
     }
     .celebrate & .score-box h4 {
@@ -159,13 +179,25 @@
     .phrase {
         padding-left: 4vh;
 
-        h1 span {
-            display: inline-block;
-            color: var(--white);
-            margin: 0 0.15em;
+        @include bp {
+            grid-row-start: 2;
+            padding: 0 10px 25px;
+            border-bottom: 1px solid var(--yellow);
+        }
 
-            &.spoken {
-                color: var(--yellow);
+        h1 {
+            @include bp {
+                font-size: 48px;
+                margin-top: 15px;
+            }
+            span {
+                display: inline-block;
+                color: var(--white);
+                margin: 0 0.15em;
+
+                &.spoken {
+                    color: var(--yellow);
+                }
             }
         }
     }
@@ -173,5 +205,16 @@
         position: absolute;
         bottom: 10px;
         right: 10px;
+    }
+    .face-tracking {
+        @include bp {
+            grid-row-start: 3;
+        }
+    }
+    .voice {
+        @include bp {
+            grid-row-start: 5;
+            min-height: 150px;
+        }
     }
 }
